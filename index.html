@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Shapes Experiment</title>
+  <meta charset="utf-8"/>
+  <script src="jspsych-6.1.0/jspsych.js"> </script>
+  <script src="jspsych-6.1.0/plugins/jspsych-audio-keyboard-response.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-call-function.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
+  <script src="jspsych-6.1.0/plugins/jspsych-audio-button-response-flexiblelocations.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.2.0/papaparse.min.js"></script>
+  <link rel="stylesheet" href="jspsych-6.1.0/css/jspsych.css",type="text/css"> </link>
+  <link href="css/jspsych.css" rel="stylesheet" type="text/css"></link>
+  <style>
+  div.absolute {
+    position: absolute;
+    left: 10px;
+    right: 0px;
+    top: 10px;
+    border: 3px solid #73AD21;
+  }
+  </style>
+</head>
+<body>
+  <div id="shapes-lwl"></div>
+</body>
+
+<script>
+
+
+
+/* Enter subject id */
+//var subject_id = prompt("Subject ID", "test")
+var subject_id = jsPsych.data.getURLVariable('sub')
+//var trial_order = prompt("Order (1 or 2)","1");
+var trial_order = jsPsych.data.getURLVariable('order')
+
+// read from a public spreadsheet for  trials
+// use the publish link NOT the sharing link
+
+if (trial_order == "1") {
+	var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder1_Object1_4Prac.csv'
+} else if (trial_order =="2") {
+	var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder2_Object1_4Prac.csv'
+} else if (trial_order =="3") {
+  var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder1_Object2_4Prac.csv'
+} else if (trial_order =="4") {
+  var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder2_Object2_4Prac.csv'
+}
+
+//lwl orders
+Papa.parse(publicSpreadsheetUrl,{
+  download: true,
+  header: true,
+  dynamicTyping: true,
+  complete: function(results) {
+    var data = results.data
+    console.log(data)
+    startExperiment(data); //don't start experiment until the spreadsheet is downloaded
+  }
+})
+
+
+document.body.style.backgroundColor = "gray";
+document.body.style.backgroundSize = "100%";
+document.body.style.backgroundPosition = "top";
+document.body.style.backgroundRepeat = "no-repeat";
+
+/* create experiment timeline*/
+var timeline = []
+
+/* extract the elements from the CSV */
+function createTrials(data) {
+  console.log(data);
+
+/* display start screen */
+  var welcome = {
+    type: "fullscreen",
+    message: "",
+    button_label: "Start",
+    delay_after: 250
+  }
+
+  timeline.push(welcome);
+
+  var audio_test = {
+    type: "audio-keyboard-response",
+    stimulus:"stimuli/audio/wow_cool_x4.wav",
+    choices:['space'],
+    prompt: "<p> Please turn the volume up or down, so that the volume resembles a person's voice in the room. <br> Please tell the experimenter when you think the level is comfortable for your baby.</br> </p>"
+  }
+  timeline.push(audio_test);
+
+  var expLength = data.length;
+  var audioExt="stimuli/audio/"
+  var imageStart='<img src= "stimuli/images/'
+  var imageStop='.jpg"  title = "" width="300" height="300">'
+  var videoStart = "stimuli/videos/"
+  var videoStop = ".mp4"
+
+// define the experimental procedure
+  for (var i = 0; i < expLength; i++) {
+    //define stimuli variables
+    var cur_trial_type = data[i]['trial_type'];
+    var cur_stimulus = audioExt+data[i]['auditory_stimulus']+".wav";
+    var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop];
+    var cur_video = videoStart+data[i]['center_video']+videoStop;
+    var cur_video = [cur_video];
+    var cur_left_image = imageStart+data[i]['left_image']+imageStop;
+    var cur_right_image = imageStart+data[i]['right_image']+imageStop;
+
+    //define html buttons
+    var cur_video_button = '<div><video id="center-video" width="800" ></div>';
+    var cur_video_button_play = '<div><video id="center-video-play" width="800" autoplay></div>';
+    var button_html = [cur_video_button_play];
+    var selector_ids = ['center-video-play'];
+
+    //define set up visual display
+    var cur_background = data[i]['background'];
+
+    if (cur_trial_type == "LWL"){
+      //defne LWL trials
+      var lwl_trials = {
+        type: 'audio-button-response-flexiblelocations',
+        stimulus: cur_stimulus,
+        choices: cur_images,
+        set_background: cur_background,
+        trial_ends_after_audio: true,
+        //trial_duration: 5000,
+        margin_top: ['0px','0px'],
+        margin_bottom: ['0px','0px'],
+        margin_left: ['0px','250px'],
+        margin_right: ['250px','0px'],
+        response_ends_trial: false,
+        post_trial_gap: 500,
+        data:{
+    		left_image: data[i]['left_image'],
+    		right_image: data[i]['right_image'],
+    		target_label: data[i]['target_label'],
+    		target_side: data[i]['target_side'],
+        trial_type: data[i]['trial_type'],
+    		correct_response: data[i]['correct_response'],
+    		background: data[i]['background']},
+        on_finish: function(data) {
+          data.correct = data.button_pressed == data.correct_response;
+        }
+      }
+        timeline.push(lwl_trials);
+    } else {
+
+      // define training trials
+      var train_trials = {
+        type: 'audio-button-response-flexiblelocations',
+			  preload_video_button: true,
+        stimulus: cur_stimulus,
+        choices: cur_video,
+        button_html: button_html,
+			  selector_ids: selector_ids,
+        trial_ends_after_audio: true,
+        //trial_duration: 4500-7500,
+        margin_top: ['0px','0px'],
+        margin_bottom: ['0px','0px'],
+        margin_left: ['0px','0px'],
+        margin_right: ['0px','0px'],
+        response_possible: false,
+        post_trial_gap: 500,
+        response_ends_trial: false,
+        set_background: cur_background,
+        data:{
+          center_video: data[i]['center_video'],
+          trial_type: data[i]['trial_type'],
+          correct_response: data[i]['correct_response'],
+          background: data[i]['background']},
+        on_finish: function(data) {
+          data.correct = data.button_pressed == data.correct_response;
+        }
+      }
+      timeline.push(train_trials);
+    }
+}
+
+  var fullscreen_exit = {
+    type: 'fullscreen',
+    fullscreen_mode: false
+  }
+  timeline.push(fullscreen_exit)
+};
+
+
+var imageExt = 'stimuli/images/'
+
+
+var images = [
+"apple.jpg",
+"ball.jpg",
+"book.jpg",
+"shoe.jpg",
+"colat.jpg",
+"manu.jpg",
+"tever.jpg",
+"wiso.jpg",
+"autumn-left.jpg",
+"autumn-right.jpg",
+"fireworks-left.jpg",
+"fireworks-right.jpg",
+"mountain-left.jpg",
+"mountain-right.jpg",
+"ocean-left.jpg",
+"ocean-right.jpg",
+"waterfall-left.jpg",
+"waterfall-right.jpg",
+"gray-background.jpg"
+]
+
+var preload_images=[];
+
+for (var k = 0; k < images.length; k++) {
+	preload_images.push(imageExt+images[k]);
+};
+
+
+var audio = [
+  "AG_almost_done.wav",
+  "AG_cool.wav",
+  "AG_doing_great.wav",
+  "AG_great_job_done.wav",
+  "AG_great_job.wav",
+  "AG_how_fun.wav",
+  "AG_neat.wav",
+  "AG_nice_listening.wav",
+  "AG_wow.wav",
+  "find_colat.wav",
+  "find_manu.wav",
+  "find_tever.wav",
+  "find_wiso.wav",
+  "look_colat.wav",
+  "look_manu.wav",
+  "look_shoe.wav",
+  "look_tever.wav",
+  "look_wiso.wav",
+  "LT_here_colat1.wav",
+  "LT_here_colat3.wav",
+  "LT_here_manu2.wav",
+  "LT_here_manu3.wav",
+  "LT_here_tever1.wav",
+  "LT_here_tever2.wav",
+  "LT_here_tever3.wav",
+  "LT_here_wiso1.wav",
+  "LT_here_wiso2.wav",
+  "LT_this_colat1.wav",
+  "LT_this_colat2.wav",
+  "LT_this_manu2.wav",
+  "LT_this_manu3.wav",
+  "LT_this_tever2.wav",
+  "LT_this_tever3.wav",
+  "LT_this_wiso1.wav",
+  "LT_this_wiso2.wav",
+  "PE_check1.wav",
+  "PE_check2.wav",
+  "PE_check3.wav",
+  "PE_cool1.wav",
+  "PE_cool2.wav",
+  "PE_cool3.wav",
+  "PE_look1.wav",
+  "PE_look2.wav",
+  "PE_look3.wav",
+  "PE_wow1.wav",
+  "PE_wow2.wav",
+  "PE_wow3.wav",
+  "see_colat.wav",
+  "see_manu.wav",
+  "see_tever.wav",
+  "see_wiso.wav",
+  "where_ball.wav",
+  "where_colat.wav",
+  "where_manu.wav",
+  "where_tever.wav",
+  "where_wiso.wav",
+  "silence.wav",
+  "wow_cool_x4.wav",
+  "find_ball.wav",
+  "see_show.wav"
+];
+
+var preload_audio  = [];
+
+for (var l = 0; l < preload_audio.length; l++) {
+	preload_audio.push(audioExt+audio[l]);
+};
+
+var videoExt = 'stimuli/videos/'
+
+var video = [
+  "LT_C_colat.mp4",
+  "LT_C_manu.mp4",
+  "LT_C_tever.mp4",
+  "LT_C_wiso.mp4",
+  "LT_UC_colat.mp4",
+  "LT_UC_manu.mp4",
+  "LT_UC_tever.mp4",
+  "LT_UC_wiso.mp4",
+  "PE_C_colat.mp4",
+  "PE_C_manu.mp4",
+  "PE_C_tever.mp4",
+  "PE_C_wiso.mp4",
+  "PE_UC_colat.mp4",
+  "PE_UC_manu.mp4",
+  "PE_UC_tever.mp4",
+  "PE_UC_wiso.mp4",
+  "BouncyBalls.mp4",
+  "Balloons.mp4"
+];
+
+var preload_vids=[];
+
+for (var m = 0; m < video.length; m++) {
+	preload_vids.push(videoExt+video[m]);
+};
+
+console.log(preload_vids);
+
+function startExperiment(data) {
+	createTrials(data);
+  // generate all the plugins
+jsPsych.init({ //js.psych initializes
+  timeline: timeline,
+  preload_audio:preload_audio,
+  preload_images:preload_images,
+  preload_video: preload_vids,
+	default_iti: 500,
+  on_finish: function() {
+    //jsPsych.data.displayData();
+  }
+});
+};
+
+
+/*
+function save_data(experiment, version,identifier, data){
+ 	$.ajax({
+ 		type: 'post',
+ 		cache: false,
+ 		url: 'https://data.infantlearning.waisman.wisc.edu/infantdb/datastore/save/',
+ 		data: {
+ 			experiment: experiment,
+ 	version: version,
+ 			identifier: identifier,
+ 			data: data
+ 		}
+ 	})
+ };
+*/
+
+
+</script>
+
+</html>
