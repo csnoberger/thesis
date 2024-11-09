@@ -40,13 +40,13 @@ var trial_order = jsPsych.data.getURLVariable('order')
 // use the publish link NOT the sharing link
 
 if (trial_order == "1") {
-	var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder1_Object1_4Prac.csv'
+	var publicSpreadsheetUrl = 'https://csnoberger.github.io/thesis/orders/shapesOrder1_Object1.csv'
 } else if (trial_order =="2") {
-	var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder2_Object1_4Prac.csv'
+	var publicSpreadsheetUrl = 'https://csnoberger.github.io/thesis/orders/shapesOrder2_Object1_4Prac.csv'
 } else if (trial_order =="3") {
-  var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder1_Object2_4Prac.csv'
+  	var publicSpreadsheetUrl = 'https://csnoberger.github.io/thesis/orders/shapesOrder1_Object2_4Prac.csv'
 } else if (trial_order =="4") {
-  var publicSpreadsheetUrl = 'https://ebreitfeld.github.io/shapes/orders/shapesOrder2_Object2_4Prac.csv'
+  	var publicSpreadsheetUrl = 'https://csnoberger.github.io/thesis/orders/shapesOrder2_Object2_4Prac.csv'
 }
 
 //lwl orders
@@ -111,8 +111,8 @@ function createTrials(data) {
     var cur_right_image = imageStart+data[i]['right_image']+imageStop;
 
     //define html buttons
-    var cur_video_button = '<div><video id="center-video" width="800" ></div>';
-    var cur_video_button_play = '<div><video id="center-video-play" width="800" autoplay></div>';
+    var cur_video_button = '<div><video id="center-video" width="1200" ></div>';
+    var cur_video_button_play = '<div><video id="center-video-play" width="1200" autoplay></div>';
     var button_html = [cur_video_button_play];
     var selector_ids = ['center-video-play'];
 
@@ -221,14 +221,15 @@ var audio = [
   "Teacher_intro_neg.wav",
   "Student_intro_neg.wav",
   "Student_intro_pos.wav",
-  "Peer_conversation_right.wav",
-  "Peer_conversation_left.wav",
+  "Peer_conversation_pos_right.wav",
+  "Peer_conversation_pos_left.wav",
   "Labeling_novel.wav",
   "Labeling_crayon.wav",
   "Labeling_gluestick.wav",
   "Labeling_paintbrush.wav",
   "Labeling_scissors.wav",
-  "End.wav",  
+  "silence.wav",
+  "End.wav"
 ];
 
 var preload_audio  = [];
@@ -244,14 +245,14 @@ var video = [
   "Teacher_intro_neg.mp4",
   "Student_intro_neg.mp4",
   "Student_intro_pos.mp4",
-  "Peer_conversation_right.mp4",
-  "Peer_conversation_left.mp4",
+  "Peer_conversation_pos_right.mp4",
+  "Peer_conversation_pos_left.mp4",
   "Labeling_novel.mp4",
   "Labeling_crayon.mp4",
   "Labeling_gluestick.mp4",
   "Labeling_paintbrush.mp4",
   "Labeling_scissors.mp4",
-  "End.mp4",
+  "End.mp4"
 ];
 
 var preload_vids=[];
