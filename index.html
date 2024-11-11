@@ -199,9 +199,11 @@ var videoStop = ".mp4"
         stimulus: cur_stimulus,
 	choices: [], // No choices for practice trials
     	trial_duration: 2000, // Duration of the trial in milliseconds
-    	on_load: function() {
-		document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + background + '.png")';
-   	 },
+	on_load: (function(background) {
+      	return function() {
+        document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + background + '.png")';
+      };
+    })(data[i]['background']),
         data:{
     		center_image: data[i]['center_image'],
     		target_label: data[i]['target_label'],
