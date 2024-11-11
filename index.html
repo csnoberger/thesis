@@ -195,9 +195,9 @@ var videoStop = ".mp4"
  if (cur_trial_type == "Practice"){
       //defne practice trials
       var practice_trials = {
-        type: 'audio-button-response-flexiblelocations',
-        stimulus: cur_stimulus,
-	choices: [], // No choices for practice trials
+	type: 'html-keyboard-response', // Use html-keyboard-response to include custom HTML
+        stimulus: '<div class="background-image"></div>',
+        choices: jsPsych.NO_KEYS, // No choices for practice trials
     	trial_duration: 2000, // Duration of the trial in milliseconds
 	on_load: (function(background) {
       	return function() {
