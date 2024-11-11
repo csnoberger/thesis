@@ -196,10 +196,11 @@ var videoStop = ".mp4"
       var practice_trials = {
         type: 'audio-button-response-flexiblelocations',
         stimulus: cur_stimulus,
-	choices: '<div class="background-image"></div>',
-  	trial_duration: 2000, // duration of the trial in milliseconds
-  	on_load: function() {
-   	 document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/+data[i]['background']+imageStop2)';},
+	choices: [], // No choices for practice trials
+    	trial_duration: 2000, // Duration of the trial in milliseconds
+    	on_load: function() {
+      document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + data[i]['background'] + '.png")';
+   	 },
         data:{
     		center_image: data[i]['center_image'],
     		target_label: data[i]['target_label'],
