@@ -119,6 +119,7 @@ var videoStop = ".mp4"
     var cur_video = [cur_video];
     var cur_left_image = imageStart+data[i]['left_image']+imageStop;
     var cur_right_image = imageStart+data[i]['right_image']+imageStop;
+    var background = data[i]['background']
 
     //define html buttons
     var cur_video_button = '<div><video id="center-video" width="1200" ></div>';
@@ -199,7 +200,7 @@ var videoStop = ".mp4"
 	choices: [], // No choices for practice trials
     	trial_duration: 2000, // Duration of the trial in milliseconds
     	on_load: function() {
-		document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + data[i]['background'] + '.png")';
+		document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + background + '.png")';
    	 },
         data:{
     		center_image: data[i]['center_image'],
