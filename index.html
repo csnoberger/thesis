@@ -61,8 +61,15 @@ Papa.parse(publicSpreadsheetUrl,{
   }
 })
 
+//define set up visual display
+var cur_background = imageStart+data[i]['background']+imageStop2;
 
+function set_html_style_1() {
 document.body.style.backgroundColor = "gray";
+}
+function set_html_style_2() {
+document.body.style.backgroundImage = cur_background;
+}
 document.body.style.backgroundSize = "100%";
 document.body.style.backgroundPosition = "top";
 document.body.style.backgroundRepeat = "no-repeat";
@@ -77,6 +84,7 @@ function createTrials(data) {
 /* display start screen */
   var welcome = {
     type: "fullscreen",
+    on_start: set_html_style1,
     message: "",
     button_label: "Start",
     delay_after: 250
@@ -118,13 +126,11 @@ function createTrials(data) {
     var button_html = [cur_video_button_play];
     var selector_ids = ['center-video-play'];
 
-    //define set up visual display
-    var cur_background = imageStart+data[i]['background']+imageStop2;
-
     if (cur_trial_type == "LWL"){
       //defne LWL trials
       var lwl_trials = {
         type: 'audio-button-response-flexiblelocations',
+	on_start: set_html_style2,
         stimulus: cur_stimulus,
         choices: cur_images,
         background_image: cur_background,
