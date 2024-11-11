@@ -195,8 +195,8 @@ var videoStop = ".mp4"
       //defne practice trials
       var practice_trials = {
         type: 'audio-button-response-flexiblelocations',
-        stimulus: '<div class="background-image"></div>',
-	choices: jsPsych.NO_KEYS,
+        stimulus: cur_stimulus,
+	choices: '<div class="background-image"></div>',
   	trial_duration: 2000, // duration of the trial in milliseconds
   	on_load: function() {
    	 document.querySelector('.background-image').style.backgroundImage = cur_background},
