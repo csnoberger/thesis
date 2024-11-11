@@ -71,15 +71,18 @@ var videoStart = "stimuli/videos/"
 var videoStop = ".mp4"
 var cur_background = imageStart+data[i]['background']+imageStop2;
 
-function set_html_style_1() {
 document.body.style.backgroundColor = "gray";
-}
-function set_html_style_2() {
 document.body.style.backgroundImage = cur_background;
-}
 document.body.style.backgroundSize = "100%";
 document.body.style.backgroundPosition = "top";
 document.body.style.backgroundRepeat = "no-repeat";
+
+.background-image {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
 
 /* create experiment timeline*/
 var timeline = []
@@ -91,7 +94,6 @@ function createTrials(data) {
 /* display start screen */
   var welcome = {
     type: "fullscreen",
-    on_start: set_html_style_1,
     message: "",
     button_label: "Start",
     delay_after: 250
@@ -193,17 +195,11 @@ function createTrials(data) {
       //defne practice trials
       var practice_trials = {
         type: 'audio-button-response-flexiblelocations',
-        stimulus: cur_stimulus,
-        choices: cur_image,
-        background_image: cur_background,
-        trial_ends_after_audio: true,
-        //trial_duration: 5000,
-        margin_top: ['0px','0px'],
-        margin_bottom: ['0px','0px'],
-        margin_left: ['0px','0px'],
-        margin_right: ['0px','0px'],
-        response_ends_trial: false,
-        post_trial_gap: 500,
+        stimulus: '<div class="background-image"></div>',
+	choices: jsPsych.NO_KEYS,
+  	trial_duration: 2000, // duration of the trial in milliseconds
+  	on_load: function() {
+   	 document.querySelector('.background-image').style.backgroundImage = cur_background},
         data:{
     		center_image: data[i]['center_image'],
     		target_label: data[i]['target_label'],
