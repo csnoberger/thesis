@@ -199,7 +199,7 @@ var videoStop = ".mp4"
 	choices: '<div class="background-image"></div>',
   	trial_duration: 2000, // duration of the trial in milliseconds
   	on_load: function() {
-   	 document.querySelector('.background-image').style.backgroundImage = 'url(cur_background)'},
+   	 document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/+data[i]['background']+imageStop2)';},
         data:{
     		center_image: data[i]['center_image'],
     		target_label: data[i]['target_label'],
