@@ -96,6 +96,7 @@ function createTrials(data) {
   var audioExt="stimuli/audio/"
   var imageStart='<img src= "stimuli/images/'
   var imageStop='.png"  title = "" width="300" height="300">'
+  var imageStop2='.png"  title = "" width="1200" height="680">'
   var videoStart = "stimuli/videos/"
   var videoStop = ".mp4"
 
@@ -105,6 +106,7 @@ function createTrials(data) {
     var cur_trial_type = data[i]['trial_type'];
     var cur_stimulus = audioExt+data[i]['auditory_stimulus']+".wav";
     var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop];
+    var cur_image = [imageStart+data[i]['center_image']+imageStop2;
     var cur_video = videoStart+data[i]['center_video']+videoStop;
     var cur_video = [cur_video];
     var cur_left_image = imageStart+data[i]['left_image']+imageStop;
@@ -147,8 +149,9 @@ function createTrials(data) {
         }
       }
         timeline.push(lwl_trials);
-    } else {
+    }
 
+	if (cur_trial_type == "T"){
       // define training trials
       var train_trials = {
         type: 'audio-button-response-flexiblelocations',
@@ -179,6 +182,33 @@ function createTrials(data) {
       timeline.push(train_trials);
     }
 }
+
+ if (cur_trial_type == "Practice"){
+      //defne practice trials
+      var practice_trials = {
+        type: 'audio-button-response-flexiblelocations',
+        stimulus: cur_stimulus,
+        choices: cur_image,
+        set_background: cur_background,
+        trial_ends_after_audio: true,
+        //trial_duration: 5000,
+        margin_top: ['0px','0px'],
+        margin_bottom: ['0px','0px'],
+        margin_left: ['0px','250px'],
+        margin_right: ['250px','0px'],
+        response_ends_trial: false,
+        post_trial_gap: 500,
+        data:{
+    		center_image: data[i]['center_image'],
+        trial_type: data[i]['trial_type'],
+    		correct_response: data[i]['correct_response'],
+    		background: data[i]['background']},
+        on_finish: function(data) {
+          data.correct = data.button_pressed == data.correct_response;
+        }
+      }
+        timeline.push(practice_trials);
+    }
 
   var fullscreen_exit = {
     type: 'fullscreen',
