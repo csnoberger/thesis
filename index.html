@@ -107,7 +107,6 @@ function createTrials(data) {
     var cur_stimulus = audioExt+data[i]['auditory_stimulus']+".wav";
     var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop];
     var cur_image = imageStart+data[i]['center_image']+imageStop2;
-    var cur_image = [cur_image];
     var cur_video = videoStart+data[i]['center_video']+videoStop;
     var cur_video = [cur_video];
     var cur_left_image = imageStart+data[i]['left_image']+imageStop;
@@ -201,6 +200,8 @@ function createTrials(data) {
         post_trial_gap: 500,
         data:{
     		center_image: data[i]['center_image'],
+    		target_label: data[i]['target_label'],
+    		target_side: data[i]['target_side'],
         trial_type: data[i]['trial_type'],
     		correct_response: data[i]['correct_response'],
     		background: data[i]['background']},
