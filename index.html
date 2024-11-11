@@ -20,6 +20,12 @@
     top: 10px;
     border: 3px solid #73AD21;
   }
+.background-image {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
   </style>
 </head>
 <body>
@@ -61,15 +67,6 @@ Papa.parse(publicSpreadsheetUrl,{
   }
 })
 
-//define set up visual display
-var expLength = data.length;
-var audioExt="stimuli/audio/"
-var imageStart='<img src= "stimuli/images/'
-var imageStop='.png"  title = "" width="300" height="300">'
-var imageStop2='.png"  title = "" width="1200" height="680">'
-var videoStart = "stimuli/videos/"
-var videoStop = ".mp4"
-var cur_background = imageStart+data[i]['background']+imageStop2;
 
 document.body.style.backgroundColor = "gray";
 document.body.style.backgroundImage = cur_background;
@@ -77,12 +74,6 @@ document.body.style.backgroundSize = "100%";
 document.body.style.backgroundPosition = "top";
 document.body.style.backgroundRepeat = "no-repeat";
 
-.background-image {
-  width: 100vw;
-  height: 100vh;
-  background-size: cover;
-  background-position: center;
-}
 
 /* create experiment timeline*/
 var timeline = []
@@ -109,6 +100,14 @@ function createTrials(data) {
   }
   timeline.push(audio_test);
 
+//define set up visual display
+var expLength = data.length;
+var audioExt="stimuli/audio/"
+var imageStart='<img src= "stimuli/images/'
+var imageStop='.png"  title = "" width="300" height="300">'
+var imageStop2='.png"  title = "" width="1200" height="680">'
+var videoStart = "stimuli/videos/"
+var videoStop = ".mp4"
 
 // define the experimental procedure
   for (var i = 0; i < expLength; i++) {
@@ -127,6 +126,9 @@ function createTrials(data) {
     var cur_video_button_play = '<div><video id="center-video-play" width="1200" autoplay></div>';
     var button_html = [cur_video_button_play];
     var selector_ids = ['center-video-play'];
+
+    //define visual display
+    var cur_background = imageStart+data[i]['background']+imageStop2;
 
     if (cur_trial_type == "LWL"){
       //defne LWL trials
