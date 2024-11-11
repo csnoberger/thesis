@@ -62,6 +62,13 @@ Papa.parse(publicSpreadsheetUrl,{
 })
 
 //define set up visual display
+var expLength = data.length;
+var audioExt="stimuli/audio/"
+var imageStart='<img src= "stimuli/images/'
+var imageStop='.png"  title = "" width="300" height="300">'
+var imageStop2='.png"  title = "" width="1200" height="680">'
+var videoStart = "stimuli/videos/"
+var videoStop = ".mp4"
 var cur_background = imageStart+data[i]['background']+imageStop2;
 
 function set_html_style_1() {
@@ -100,13 +107,6 @@ function createTrials(data) {
   }
   timeline.push(audio_test);
 
-  var expLength = data.length;
-  var audioExt="stimuli/audio/"
-  var imageStart='<img src= "stimuli/images/'
-  var imageStop='.png"  title = "" width="300" height="300">'
-  var imageStop2='.png"  title = "" width="1200" height="680">'
-  var videoStart = "stimuli/videos/"
-  var videoStop = ".mp4"
 
 // define the experimental procedure
   for (var i = 0; i < expLength; i++) {
