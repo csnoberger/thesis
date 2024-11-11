@@ -105,8 +105,8 @@ function createTrials(data) {
     //define stimuli variables
     var cur_trial_type = data[i]['trial_type'];
     var cur_stimulus = audioExt+data[i]['auditory_stimulus']+".wav";
-    var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop];
-    var cur_image = imageStart+data[i]['center_image']+imageStop2;
+    var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop, imageStart+data[i]['center_image']+imageStop2];
+    //var cur_image = imageStart+data[i]['center_image']+imageStop2;
     var cur_video = videoStart+data[i]['center_video']+videoStop;
     var cur_video = [cur_video];
     var cur_left_image = imageStart+data[i]['left_image']+imageStop;
@@ -188,7 +188,7 @@ function createTrials(data) {
       var practice_trials = {
         type: 'audio-button-response-flexiblelocations',
         stimulus: cur_stimulus,
-        choices: cur_image,
+        choices: cur_images,
         set_background: cur_background,
         trial_ends_after_audio: true,
         //trial_duration: 5000,
