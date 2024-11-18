@@ -20,6 +20,12 @@
     top: 10px;
     border: 3px solid #73AD21;
   }
+.background-image {
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
   </style>
 </head>
 <body>
@@ -67,6 +73,7 @@ document.body.style.backgroundSize = "100%";
 document.body.style.backgroundPosition = "top";
 document.body.style.backgroundRepeat = "no-repeat";
 
+
 /* create experiment timeline*/
 var timeline = []
 
@@ -92,13 +99,14 @@ function createTrials(data) {
   }
   timeline.push(audio_test);
 
-  var expLength = data.length;
-  var audioExt="stimuli/audio/"
-  var imageStart='<img src= "stimuli/images/'
-  var imageStop='.png"  title = "" width="300" height="300">'
-  var imageStop2='.png"  title = "" width="1200" height="680">'
-  var videoStart = "stimuli/videos/"
-  var videoStop = ".mp4"
+//define set up visual display
+var expLength = data.length;
+var audioExt="stimuli/audio/"
+var imageStart='<img src= "stimuli/images/'
+var imageStop='.png"  title = "" width="300" height="300">'
+var imageStop2='.png"  title = "" width="1200" height="680">'
+var videoStart = "stimuli/videos/"
+var videoStop = ".mp4"
 
 // define the experimental procedure
   for (var i = 0; i < expLength; i++) {
@@ -107,11 +115,11 @@ function createTrials(data) {
     var cur_stimulus = audioExt+data[i]['auditory_stimulus']+".wav";
     var cur_images = [imageStart+data[i]['left_image']+imageStop, imageStart+data[i]['right_image']+imageStop];
     var cur_image = imageStart+data[i]['center_image']+imageStop2;
-    var cur_image = [cur_image];
     var cur_video = videoStart+data[i]['center_video']+videoStop;
     var cur_video = [cur_video];
     var cur_left_image = imageStart+data[i]['left_image']+imageStop;
     var cur_right_image = imageStart+data[i]['right_image']+imageStop;
+    var background = data[i]['background']
 
     //define html buttons
     var cur_video_button = '<div><video id="center-video" width="1200" ></div>';
@@ -119,8 +127,8 @@ function createTrials(data) {
     var button_html = [cur_video_button_play];
     var selector_ids = ['center-video-play'];
 
-    //define set up visual display
-    var cur_background = data[i]['background'];
+    //define visual display
+    var cur_background = imageStart+data[i]['background']+imageStop2;
 
     if (cur_trial_type == "LWL"){
       //defne LWL trials
@@ -128,7 +136,7 @@ function createTrials(data) {
         type: 'audio-button-response-flexiblelocations',
         stimulus: cur_stimulus,
         choices: cur_images,
-        set_background: cur_background,
+        background_image: cur_background,
         trial_ends_after_audio: true,
         //trial_duration: 5000,
         margin_top: ['0px','0px'],
@@ -187,20 +195,19 @@ function createTrials(data) {
  if (cur_trial_type == "Practice"){
       //defne practice trials
       var practice_trials = {
-        type: 'audio-button-response-flexiblelocations',
-        stimulus: cur_stimulus,
-        choices: cur_image,
-        set_background: cur_background,
-        trial_ends_after_audio: true,
-        //trial_duration: 5000,
-        margin_top: ['0px','0px'],
-        margin_bottom: ['0px','0px'],
-        margin_left: ['0px','0px'],
-        margin_right: ['0px','0px'],
-        response_ends_trial: false,
-        post_trial_gap: 500,
+	type: 'html-keyboard-response', // Use html-keyboard-response to include custom HTML
+        stimulus: '<div class="background-image"></div>',
+        choices: jsPsych.NO_KEYS, // No choices for practice trials
+    	trial_duration: 2000, // Duration of the trial in milliseconds
+	on_load: (function(background) {
+      	return function() {
+        document.querySelector('.background-image').style.backgroundImage = 'url("stimuli/images/' + background + '.png")';
+      };
+    })(data[i]['background']),
         data:{
     		center_image: data[i]['center_image'],
+    		target_label: data[i]['target_label'],
+    		target_side: data[i]['target_side'],
         trial_type: data[i]['trial_type'],
     		correct_response: data[i]['correct_response'],
     		background: data[i]['background']},
